@@ -26,9 +26,11 @@ jobs:
         with:
           ref: ${{ github.REF }}
           fetch-depth: 0
-
+      - name: install typescript dependency
+        run: |
+          npm install typescript
       # Conditional execution can be done, in this case the parameter to use with sonar scanner are different if we are analyzing main or a branch
-      - if: endsWith(github.REF, '/main') != true
+      - if: endsWith(github.REF, '/master') != true
         name: 'Run an analysis of the ${{ github.REF }} branch'
         env:
           # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
@@ -39,8 +41,10 @@ jobs:
           -Dsonar.projectKey=${{ secrets.SONAR_PROJECT }}
           -Dsonar.branch.name=${GITHUB_REF:11}
           -Dsonar.scm.provider=git
+          -Dsonar.exclusions=**/public/**
+          -Dsonar.sources=src
 
-      - if: endsWith(github.REF, '/main') == true
+      - if: endsWith(github.REF, '/master') == true
         name: 'Run an analysis of the main branch'
         env:
           # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
@@ -51,3 +55,5 @@ jobs:
           -Dsonar.projectKey=${{ secrets.SONAR_PROJECT }}
           -Dsonar.scm.provider=git
           -Dsonar.java.binaries=/tmp
+          -Dsonar.exclusions=**/public/**
+          -Dsonar.sources=src

@@ -42,4 +42,6 @@ jobs:
           -Dsonar.pullrequest.base=${{ github.BASE_REF }}
           -Dsonar.pullrequest.github.repository=${{ github.repository }}
           -Dsonar.java.binaries=/tmp
+          -Dsonar.exclusions=**/public/**
+          -Dsonar.sources=src
           -Dsonar.scm.revision=${{ github.event.pull_request.head.sha }}
